@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"os"
 
+	"program/main/cipher"
+
 	"github.com/spf13/cobra"
 )
 
@@ -25,12 +27,35 @@ to quickly create a Cobra application.`,
 	Args: cobra.MaximumNArgs(1),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("encrypt called")
+		fmt.Println("encrypting")
 
 		// Read the file and check for an error
 		dat, err := os.ReadFile(args[0])
 		check(err)
-		fmt.Print(string(dat))
+		//fmt.Print(string(dat))
+
+		key := "this_must_be_of_32_byte_length!!"
+		encryptedString := cipher.EncryptFile(key, string(dat))
+
+		// Storing encrypted text in new file
+		f, err := os.Create("/Users/luka/Desktop/encrypted/dat2")
+		check(err)
+
+		defer f.Close()
+
+		text, err := f.WriteString(encryptedString)
+		check(err)
+		megabytes := text / 1000000
+		fmt.Printf("Wrote %d mb.\n", megabytes)
+
+		f.Sync()
+
+		// Open file for I/O operations
+		// f, err := os.Open(args[0])
+		// check(err)
+
+		// Close file for I/O
+		// f.Close()
 	},
 }
 
