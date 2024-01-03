@@ -1,10 +1,11 @@
 /*
-Copyright © 2023 Luka Piplica piplicaluka64@gmail.com
+Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 */
 package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"program/main/cipher"
@@ -13,10 +14,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// encryptCmd represents the encrypt command
-var encryptCmd = &cobra.Command{
-	Use:   "encrypt [FILE]",
-	Short: "Encrypting a [FILE] with AES encryption",
+// decryptCmd represents the decrypt command
+var decryptCmd = &cobra.Command{
+	Use:   "decrypt [FILE]",
+	Short: "Decrypting a [FILE] with AES encryption",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -28,47 +29,43 @@ to quickly create a Cobra application.`,
 	Args: cobra.MaximumNArgs(1),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("encrypting")
+		fmt.Println("decrypting")
 
-		// Read the file and check for an error
+		// Read encrypted file
 		dat, err := os.ReadFile(args[0])
 		error.Check(err)
-		//fmt.Print(string(dat))
+		log.SetFlags(log.LstdFlags | log.Llongfile)
+		log.Println(": inputted file working")
 
 		key := "this_must_be_of_32_byte_length!!"
-		encryptedString := cipher.EncryptFile(key, string(dat))
+		decryptedString := cipher.DecryptFile(key, string(dat))
 
-		// Storing encrypted text in new file
-		f, err := os.Create("/Users/luka/Desktop/encrypted/dat2")
+		// Creating a new file to store decrytped text
+		f, err := os.Create("/Users/luka/Desktop/encrypted/message")
 		error.Check(err)
+
+		log.Println("Create file path working")
 
 		defer f.Close()
 
-		text, err := f.WriteString(encryptedString)
+		text, err := f.WriteString(decryptedString)
 		error.Check(err)
 		fmt.Printf("Wrote %d bytes.\n", text)
 
 		f.Sync()
-
-		// Open file for I/O operations
-		// f, err := os.Open(args[0])
-		// check(err)
-
-		// Close file for I/O
-		// f.Close()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(encryptCmd)
+	rootCmd.AddCommand(decryptCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// encryptCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// decryptCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// encryptCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// decryptCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
