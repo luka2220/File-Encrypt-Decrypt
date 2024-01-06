@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Copyright © 2023 Luka Piplica piplicaluka64@gmail.com
 */
 package cmd
 

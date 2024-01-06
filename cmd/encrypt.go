@@ -39,14 +39,15 @@ to quickly create a Cobra application.`,
 		encryptedString := cipher.EncryptFile(key, string(dat))
 
 		// Storing encrypted text in new file
-		f, err := os.Create("/Users/luka/Desktop/encrypted/dat2")
+		filePath := "/Users/luka/Desktop/encrypted/dat2"
+		f, err := os.Create(filePath)
 		error.Check(err)
 
 		defer f.Close()
 
-		text, err := f.WriteString(encryptedString)
+		bytes, err := f.WriteString(encryptedString)
 		error.Check(err)
-		fmt.Printf("Wrote %d bytes.\n", text)
+		fmt.Printf("Wrote %d bytes to %s.\n", bytes, filePath)
 
 		f.Sync()
 

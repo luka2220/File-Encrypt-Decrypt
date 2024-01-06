@@ -1,9 +1,13 @@
 package cipher
 
 import (
+	"io"
+	"log"
 	"program/main/error"
 
 	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
 	"encoding/hex"
 )
 
@@ -15,15 +19,26 @@ message: string - text for encrypting
 func EncryptFile(key string, message string) string {
 	// Key should be 32-bit to select AES-256
 	cipherBlock, err := aes.NewCipher([]byte(key))
-
 	error.Check(err)
 
-	//gcm, err = cipher.NewGCM()
+	// Createing an instance of GCM block cipher
+	gcm, err := cipher.NewGCM(cipherBlock)
+	error.Check(err)
 
-	msgByte := make([]byte, len(message))
-	cipherBlock.Encrypt(msgByte, []byte(message))
+	// Initializing a byte slice with ASCII representation of
+	// the message to encrypt
+	plainText := []byte(message)
+	nonce := make([]byte, gcm.NonceSize())
 
-	return hex.EncodeToString(msgByte)
+	// Reads a slice of bytes from crypto secure rand num generator
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		log.Fatalf("nonce  err: %v", err.Error())
+	}
+
+	// Encypting all text from the file
+	cipherText := gcm.Seal(nonce, nonce, plainText, nil)
+
+	return hex.EncodeToString(cipherText)
 }
 
 /*
