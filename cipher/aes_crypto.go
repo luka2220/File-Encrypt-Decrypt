@@ -1,6 +1,7 @@
 package cipher
 
 import (
+	"encoding/hex"
 	"io"
 	"log"
 	"program/main/error"
@@ -8,7 +9,6 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"encoding/hex"
 )
 
 /*
@@ -17,7 +17,7 @@ key: string - string the must be 32-bit
 message: string - text for encrypting
 */
 func EncryptFile(key string, message string) string {
-	// Key should be 32-bit to select AES-256
+	// Key should be 32-bytes to select AES-256
 	cipherBlock, err := aes.NewCipher([]byte(key))
 	error.Check(err)
 
@@ -36,26 +36,38 @@ func EncryptFile(key string, message string) string {
 	}
 
 	// Encypting all text from the file
-	cipherText := gcm.Seal(nonce, nonce, plainText, nil)
+	cipherTextAscii := gcm.Seal(nonce, nonce, plainText, nil)
 
-	return hex.EncodeToString(cipherText)
+	return hex.EncodeToString(cipherTextAscii)
 }
 
 /*
 Function decrypting the AES enctypted file
 key: string - string the must be 32-bit
-message: string - text for decrypting
+cipherText: string - encrypted file text
 */
-func DecryptFile(key string, message string) string {
-	txt, _ := hex.DecodeString(message)
-
-	cipherBlock, err := aes.NewCipher([]byte(key))
-
+func DecryptFile(key string, cipherTextHex string) string {
+	// Convert hex-encoded ciphertext to byte slice
+	cipherText, err := hex.DecodeString(cipherTextHex)
 	error.Check(err)
 
-	msgByte := make([]byte, len(txt))
-	cipherBlock.Decrypt(msgByte, []byte(txt))
+	// Key should be 32-byte for AES-256
+	block, err := aes.NewCipher([]byte(key))
+	error.Check(err)
 
-	msg := string(msgByte[:])
-	return msg
+	// Create a GCM instance
+	gcm, err := cipher.NewGCM(block)
+	error.Check(err)
+
+	// Extract nonce from the cipherText
+	nonceSize := gcm.NonceSize()
+
+	nonce := cipherText[:nonceSize]
+	cipherText = cipherText[nonceSize:]
+
+	// Decrypt the ciphertext
+	plainText, err := gcm.Open(nil, nonce, cipherText, nil)
+	error.Check(err)
+
+	return string(plainText)
 }

@@ -41,7 +41,7 @@ to quickly create a Cobra application.`,
 		decryptedString := cipher.DecryptFile(key, string(dat))
 
 		// Creating a new file to store decrytped text
-		f, err := os.Create("/Users/luka/Desktop/encrypted/message")
+		f, err := os.Create("/Users/luka/Desktop/encrypted/message.txt")
 		error.Check(err)
 
 		log.Println("Create file path working")
