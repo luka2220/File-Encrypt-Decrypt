@@ -7,15 +7,15 @@ import (
 	"fmt"
 	"os"
 
-	"program/main/cipher"
-	"program/main/error"
+	"program/crypto/cipher"
+	"program/crypto/error"
 
 	"github.com/spf13/cobra"
 )
 
 // decryptCmd represents the decrypt command
 var decryptCmd = &cobra.Command{
-	Use:   "decrypt [FILE]",
+	Use:   "decrypt [FILE] --path=[path]",
 	Short: "Decrypting a [FILE] with AES encryption",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -30,6 +30,9 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("decrypting")
 
+		// Get the flag value
+		outputPath := cmd.Flags().Lookup("path").Value.String()
+
 		// Read encrypted file
 		dat, err := os.ReadFile(args[0])
 		error.Check(err)
@@ -37,23 +40,23 @@ to quickly create a Cobra application.`,
 		key := "this_must_be_of_32_byte_length!!"
 		decryptedString := cipher.DecryptFile(key, string(dat))
 
-		// Creating a new file to store decrytped text
-		filePath := "/Users/luka/Desktop/encrypted/dat2"
-		f, err := os.Create(filePath)
+		f, err := os.Create(outputPath)
 		error.Check(err)
 
 		defer f.Close()
 
 		text, err := f.WriteString(decryptedString)
 		error.Check(err)
-		fmt.Printf("Wrote %d bytes to %s.\n", text, filePath)
+		fmt.Printf("Wrote %d bytes to %s.\n", text, outputPath)
 
 		f.Sync()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(decryptCmd)
+	// Required command flags
+	decryptCmd.Flags().StringP("path", "p", "", "File path to store the decryption result.")
+	_ = encryptCmd.MarkFlagRequired("path")
 
-	// Command flags
+	rootCmd.AddCommand(decryptCmd)
 }

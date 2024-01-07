@@ -4,7 +4,7 @@ Copyright © 2023 Luka Piplica piplicaluka64@gmail.com
 package main
 
 import (
-	"program/main/cmd"
+	"program/crypto/cmd"
 )
 
 func main() {
