@@ -1,4 +1,4 @@
-module program/main
+module program/crypto
 
 go 1.21.5
 

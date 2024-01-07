@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"os"
 
-	"program/main/cipher"
-	"program/main/error"
+	"program/crypto/cipher"
+	"program/crypto/error"
 
 	"github.com/spf13/cobra"
 )
