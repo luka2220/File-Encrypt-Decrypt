@@ -15,14 +15,14 @@ import (
 
 // encryptCmd represents the encrypt command
 var encryptCmd = &cobra.Command{
-	Use:   "encrypt [FILE]",
+	Use:   "encrypt [FILE] --path=[path]",
 	Short: "Encrypting a [FILE] with AES encryption",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Long: `The encrypt command takes in a argumnet for the file to encrypt
+	and a flag command for the path to store the result. The file path flag 
+	must be the full path on you computer. For example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	encrypt ~/Desktop/names.txt --path=/Users/luka/Desktop/encrypted/dat2
+	decrypt ~/Desktop/decrypted/message.txt`,
 
 	// Only one number of args
 	Args: cobra.MaximumNArgs(1),
@@ -30,46 +30,33 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("encrypting")
 
-		// Read the file and check for an error
+		// Get the flag value
+		outputPath := cmd.Flags().Lookup("path").Value.String()
+
+		// dat stores raw bytes of file being read from the command argument args[0]
 		dat, err := os.ReadFile(args[0])
 		error.Check(err)
-		//fmt.Print(string(dat))
 
 		key := "this_must_be_of_32_byte_length!!"
 		encryptedString := cipher.EncryptFile(key, string(dat))
 
-		// Storing encrypted text in new file
-		filePath := "/Users/luka/Desktop/encrypted/dat2"
-		f, err := os.Create(filePath)
+		f, err := os.Create(outputPath)
 		error.Check(err)
 
 		defer f.Close()
 
 		bytes, err := f.WriteString(encryptedString)
 		error.Check(err)
-		fmt.Printf("Wrote %d bytes to %s.\n", bytes, filePath)
+		fmt.Printf("Wrote %d bytes to %s.\n", bytes, outputPath)
 
 		f.Sync()
-
-		// Open file for I/O operations
-		// f, err := os.Open(args[0])
-		// check(err)
-
-		// Close file for I/O
-		// f.Close()
 	},
 }
 
 func init() {
+	// Required command flags
+	encryptCmd.Flags().StringP("path", "p", "", "File path to store the encryption result.")
+	_ = encryptCmd.MarkFlagRequired("path")
+
 	rootCmd.AddCommand(encryptCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// encryptCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// encryptCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
