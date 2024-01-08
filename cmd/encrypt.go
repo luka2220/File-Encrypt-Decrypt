@@ -11,6 +11,7 @@ import (
 	"program/crypto/error"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // encryptCmd represents the encrypt command
@@ -37,7 +38,7 @@ var encryptCmd = &cobra.Command{
 		dat, err := os.ReadFile(args[0])
 		error.Check(err)
 
-		key := "this_must_be_of_32_byte_length!!"
+		key := viper.GetString("SECRET_KEY")
 		encryptedString := cipher.EncryptFile(key, string(dat))
 
 		f, err := os.Create(outputPath)

@@ -1,24 +1,31 @@
 /*
-Copyright © 2023 Luka Piplica piplicaluka64@gmail.com
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 */
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
+var cfgFile string
+
+// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "cipher_cli",
-	Short: "Encrypt and decrypt secret messages in seconds!!!",
-	Long: `This application encrypts and decrypts secret messages with ease. 
+	Use:   "crypto",
+	Short: "A brief description of your application",
+	Long: `A longer description that spans multiple lines and likely contains
+examples and usage of using your application. For example:
 
-Try out the Caesar and Bacon Cipher options to generate secret messages and share with your inner circle
-
-cipher_cli encrypt "Welcome to the hallowed chambers" --algorithm=caesar --key=54
-
-cipher_cli encrypt "Welcome to the hallowed chambers" --algorithm=bacon`,
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -30,10 +37,40 @@ func Execute() {
 	}
 }
 
-/*
-- Function to add in flags for command
-- Declaring a persistent flag which is available to all sub commands
-*/
 func init() {
-	rootCmd.PersistentFlags().StringP("key", "k", "", "The key to pass for the algorithm")
+	cobra.OnInitialize(initConfig)
+
+	// Here you will define your flags and configuration settings.
+	// Cobra supports persistent flags, which, if defined here,
+	// will be global for your application.
+
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.crypto.yaml)")
+
+	// Cobra also supports local flags, which will only run
+	// when this action is called directly.
+	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	if cfgFile != "" {
+		// Use config file from the flag.
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory.
+		home, err := os.UserHomeDir()
+		cobra.CheckErr(err)
+
+		// Search config in home directory with name ".cipher_cli" (without extension).
+		viper.AddConfigPath(home)
+		viper.SetConfigType("yaml")
+		viper.SetConfigName(".cipher_cli")
+	}
+
+	viper.AutomaticEnv() // read in environment variables that match
+
+	// If a config file is found, read it in.
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	}
 }
