@@ -11,6 +11,7 @@ import (
 	"program/crypto/error"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // decryptCmd represents the decrypt command
@@ -37,7 +38,7 @@ to quickly create a Cobra application.`,
 		dat, err := os.ReadFile(args[0])
 		error.Check(err)
 
-		key := "this_must_be_of_32_byte_length!!"
+		key := viper.GetString("SECRET_KEY")
 		decryptedString := cipher.DecryptFile(key, string(dat))
 
 		f, err := os.Create(outputPath)

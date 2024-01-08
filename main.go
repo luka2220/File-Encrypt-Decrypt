@@ -1,11 +1,10 @@
 /*
-Copyright © 2023 Luka Piplica piplicaluka64@gmail.com
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+
 */
 package main
 
-import (
-	"program/crypto/cmd"
-)
+import "program/crypto/cmd"
 
 func main() {
 	cmd.Execute()
