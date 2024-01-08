@@ -34,3 +34,8 @@ Once you have set up the project on your system, you can access the `crypto` com
 
 ### Note
 The path flag must be the full system path of where you want to store the result of the operation. The file is not required to exist, but the path must be valid.
+
+***
+
+### Updates
+If you have any feature requests, updates, or problems please let me know. I welcome collaborators and contributors of all skill levels! 
