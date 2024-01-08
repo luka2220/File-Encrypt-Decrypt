@@ -1,5 +1,5 @@
 /*
-Copyright © 2023 Luka Piplica piplicaluka64@gmail.com
+Copyright © 2023 Luka Piplica <piplicaluka64@gmail.com>
 */
 package cmd
 
@@ -38,6 +38,7 @@ to quickly create a Cobra application.`,
 		dat, err := os.ReadFile(args[0])
 		error.Check(err)
 
+		// Read encryption key from home folder
 		key := viper.GetString("SECRET_KEY")
 		decryptedString := cipher.DecryptFile(key, string(dat))
 
