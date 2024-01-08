@@ -38,4 +38,4 @@ The path flag must be the full system path of where you want to store the result
 ***
 
 ### Updates
-If you have any feature requests, updates, or problems please let me know. I welcome collaborators and contributors of all skill levels! 
+If you have any feature requests, updates, or problems please let me know. Any collaborators and contributors are all welcome!!! 
