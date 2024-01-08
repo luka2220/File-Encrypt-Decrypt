@@ -1,11 +1,16 @@
 # File-Encrypt-Decrypt
-Command-line tool that encrypts and decrypts files using symmetric encryption algorithms.
+A command-line tool that encrypts and decrypts files using symmetric encryption algorithms.
 
 ***
 
 ## Project Setup
 Note: Make sure you have GO installed on your system
 * Clone the repo on your system
+  
+* Create a config file in your home directory to store an encryption key (must be a string of 32-byte length)
+  - `touch ~/.cipher_cli.yaml`
+  - Create the key in the file: `SECRET_KEY: "this_must_be_of_32_byte_length!!"`
+  
 * In the project directory run the following commands:
   - `go install`
   - `go build`
@@ -13,7 +18,7 @@ Note: Make sure you have GO installed on your system
 ***
 
 ## Running the CLI commands
-Once you have set up the project on your system you will have acces to the `crypto` command.
+Once you have set up the project on your system, you can access the `crypto` command.
 
 * ### Encryption command:
   - `crypto encrypt ~/Desktop/names.txt --path=/Users/luka/Desktop/names-encrypted.txt`
@@ -28,4 +33,4 @@ Once you have set up the project on your system you will have acces to the `cryp
 ***
 
 ### Note
-The path flag must be the full system path of where you want to store the result of the operation. The file does not have to exist, but the path must be valid.
+The path flag must be the full system path of where you want to store the result of the operation. The file is not required to exist, but the path must be valid.
