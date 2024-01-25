@@ -12,6 +12,7 @@ Note: Make sure you have GO installed on your system
   - Create the key in the file: `SECRET_KEY: "this_must_be_of_32_byte_length!!"`
   
 * In the project directory run the following commands:
+  - `go mod install`
   - `go install`
   - `go build`
  
